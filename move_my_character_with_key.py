@@ -11,7 +11,8 @@ background = load_image("TUK_GROUND.png")
 character = load_image("animation_sheet.png")
 character_dir = "UNMOVE"
 x, y = TUK_WIDTH // 2, TUK_HEIGHT // 2
-coordinate = ((((3,47), (61, 104), (119, 162)), (500 - 6, 500 - 62)))
+coordinate = ((((3,47), (61, 104), (119, 162)), (500 - 6 - 1, 500 - 62 - 1)),
+              (((1, 50), (63, 110), (121, 167), (176, 223), (228, 285), (292, 341), (350, 396), (412, 459), (470, 517), (518, 574)), (500 - 444 - 1, 500 - 499 - 1)))
 
 frame = 0
 
@@ -20,11 +21,11 @@ def character_motion(dir):
     global frame, x, y
 
     if dir == "UNMOVE":
-        print("unmove")
-        character.clip_draw(coordinate[0][frame][0], coordinate[1][1], (coordinate[0][frame][1] - coordinate[0][frame][0]), (coordinate[1][0] - coordinate[1][1]), x, y)
+        character.clip_draw(coordinate[0][0][frame][0], coordinate[0][1][1], (coordinate[0][0][frame][1] - coordinate[0][0][frame][0]), (coordinate[0][1][0] - coordinate[0][1][1]), x, y)
         frame = (frame + 1) % 3
     elif dir == "RIGHT":
         print("right")
+        #character.clip_draw(coordinate[1][0][frame][0], coordinate[1][1][1], ())
     elif dir == "LEFT":
         print("left")
     elif dir == "UP":

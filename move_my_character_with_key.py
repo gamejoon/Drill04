@@ -4,15 +4,25 @@ TUK_WIDTH, TUK_HEIGHT = 1280, 1024
 
 open_canvas(TUK_WIDTH, TUK_HEIGHT)
 
-character = load_image("animation_sheet.png")
+running = True
+
 background = load_image("TUK_GROUND.png")
 
-running = True
+character = load_image("animation_sheet.png")
 character_dir = "UNMOVE"
+x, y = TUK_WIDTH // 2, TUK_HEIGHT // 2
+coordinate = ((((3,47), (61, 104), (119, 162)), (500 - 6, 500 - 62)))
+
+frame = 0
 
 def character_motion(dir):
+
+    global frame, x, y
+
     if dir == "UNMOVE":
         print("unmove")
+        character.clip_draw(coordinate[0][frame][0], coordinate[1][1], (coordinate[0][frame][1] - coordinate[0][frame][0]), (coordinate[1][0] - coordinate[1][1]), x, y)
+        frame = (frame + 1) % 3
     elif dir == "RIGHT":
         print("right")
     elif dir == "LEFT":
@@ -52,6 +62,6 @@ while running:
     handle_events()
     character_motion(character_dir)
     update_canvas()
-    delay(0.01)
+    delay(0.05)
 
 close_canvas()

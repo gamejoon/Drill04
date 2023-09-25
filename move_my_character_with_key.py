@@ -11,8 +11,9 @@ background = load_image("TUK_GROUND.png")
 character = load_image("animation_sheet.png")
 character_dir = "UNMOVE"
 x, y = TUK_WIDTH // 2, TUK_HEIGHT // 2
-coordinate = ((((3,47), (61, 104), (119, 162)), (500 - 6 - 1, 500 - 62 - 1)),
-              (((1, 50), (63, 110), (121, 167), (176, 223), (228, 285), (292, 341), (350, 396), (412, 459), (470, 517), (518, 574)), (500 - 444 - 1, 500 - 499 - 1)))
+coordinate = (((3, 47, 437, 493), (61, 104, 437, 493), (119, 162, 437, 493)),
+              ((1, 50, 2, 55), (63, 110, 2, 55), (121, 167, 2, 55), (176, 223, 0, 53), (228, 285, 0, 53), (292, 341, 2, 55), (350, 396, 2, 55), (412, 459, 6, 55), (470, 517, 2, 53), (518, 574, 0, 53)),
+              ((1, 57, 124, 178), (60, 107, 127, 178), (116, 163, 131, 180), (176, 223, 127, 180), (234, 284, 127, 180), (289, 346, 124, 178), (349, 396, 124, 178), (408, 453, 129, 180), (467, 514, 129, 180), (523, 572, 127, 180)))
 
 frame = 0
 acceleration = [0, 0]
@@ -22,14 +23,15 @@ def character_motion(dir):
     global frame, x, y
 
     if dir == "UNMOVE":
-        character.clip_draw(coordinate[0][0][frame][0], coordinate[0][1][1], (coordinate[0][0][frame][1] - coordinate[0][0][frame][0]), (coordinate[0][1][0] - coordinate[0][1][1]), x, y)
+        character.clip_draw(coordinate[0][frame][0], coordinate[0][frame][2], (coordinate[0][frame][1] - coordinate[0][frame][0]), (coordinate[0][frame][3] - coordinate[0][frame][2]), x, y)
         frame = (frame + 1) % 3
     elif dir == "RIGHT":
-        print("right")
-        character.clip_draw(coordinate[1][0][frame][0], coordinate[1][1][1], (coordinate[1][0][frame][1] - coordinate[1][0][frame][0]), (coordinate[1][1][0] - coordinate[1][1][1]), x, y)
+        character.clip_draw(coordinate[1][frame][0], coordinate[1][frame][2], (coordinate[1][frame][1] - coordinate[1][frame][0]), (coordinate[1][frame][3] - coordinate[1][frame][2]), x, y)
         frame = (frame + 1) % 10
     elif dir == "LEFT":
         print("left")
+        character.clip_draw(coordinate[2][frame][0], coordinate[2][frame][2], (coordinate[2][frame][1] - coordinate[2][frame][0]), (coordinate[2][frame][3] - coordinate[2][frame][2]), x, y)
+        frame = (frame + 1) % 10
     elif dir == "UP":
         print("up")
     elif dir == "DOWN":
@@ -52,6 +54,7 @@ def handle_events():
                 acceleration[0] = 10
             elif event.key == SDLK_LEFT:
                 character_dir = "LEFT"
+                acceleration[0] = -10
             elif event.key == SDLK_UP:
                 character_dir = "UP"
             elif event.key == SDLK_DOWN:
@@ -75,6 +78,8 @@ while running:
 
     if x + 23 > TUK_WIDTH - 1:
         x = TUK_WIDTH - 1 - 23
+    elif x - 23 < 0:
+        x = 0 + 23
 
     character_motion(character_dir)
     update_canvas()

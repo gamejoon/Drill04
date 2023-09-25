@@ -15,6 +15,7 @@ coordinate = ((((3,47), (61, 104), (119, 162)), (500 - 6 - 1, 500 - 62 - 1)),
               (((1, 50), (63, 110), (121, 167), (176, 223), (228, 285), (292, 341), (350, 396), (412, 459), (470, 517), (518, 574)), (500 - 444 - 1, 500 - 499 - 1)))
 
 frame = 0
+acceleration = [0, 0]
 
 def character_motion(dir):
 
@@ -25,7 +26,8 @@ def character_motion(dir):
         frame = (frame + 1) % 3
     elif dir == "RIGHT":
         print("right")
-        #character.clip_draw(coordinate[1][0][frame][0], coordinate[1][1][1], ())
+        character.clip_draw(coordinate[1][0][frame][0], coordinate[1][1][1], (coordinate[1][0][frame][1] - coordinate[1][0][frame][0]), (coordinate[1][1][0] - coordinate[1][1][1]), x, y)
+        frame = (frame + 1) % 10
     elif dir == "LEFT":
         print("left")
     elif dir == "UP":
@@ -35,7 +37,7 @@ def character_motion(dir):
 
 def handle_events():
 
-    global running, character_dir
+    global running, character_dir, frame, acceleration
 
     events = get_events()
 
@@ -47,6 +49,7 @@ def handle_events():
                 running = False
             elif event.key == SDLK_RIGHT:
                 character_dir = "RIGHT"
+                acceleration[0] = 10
             elif event.key == SDLK_LEFT:
                 character_dir = "LEFT"
             elif event.key == SDLK_UP:
@@ -54,13 +57,25 @@ def handle_events():
             elif event.key == SDLK_DOWN:
                 character_dir = "DOWN"
         elif event.type == SDL_KEYUP:
-            if event.key == SDLK_RIGHT or event.key == SDLK_LEFT or event.key == SDLK_UP or event.key == SDLK_DOWN:
+            if event.key == SDLK_RIGHT or event.key == SDLK_LEFT:
                 character_dir = "UNMOVE"
+                frame = 0
+                acceleration[0] = 0
+            elif event.key == SDLK_UP or event.key == SDLK_DOWN:
+                character_dir = "UNMOVE"
+                frame = 0
+                acceleration[1] = 0
 
 while running:
     clear_canvas()
     background.draw(TUK_WIDTH // 2, TUK_HEIGHT // 2)
     handle_events()
+    x += acceleration[0]
+    y += acceleration[1]
+
+    if x + 23 > TUK_WIDTH - 1:
+        x = TUK_WIDTH - 1 - 23
+
     character_motion(character_dir)
     update_canvas()
     delay(0.05)
